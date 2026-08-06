@@ -8,6 +8,7 @@ const PORT = 3000;
 app.use(expres.json())
 
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await starBD();
     console.log(`server prendido en el puerto ${PORT}`);
 })
