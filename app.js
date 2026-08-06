@@ -1,4 +1,5 @@
 import express from "express";
+import { starBD } from "./src/config/database.js";
 
 const app = express();
 
