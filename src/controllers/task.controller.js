@@ -1,4 +1,4 @@
-import { Task } from "../routes/task.model.js"
+import { Task } from "../models/task.model.js"
 
 
 export const newTask = async (req, res) => {
@@ -26,13 +26,13 @@ export const newTask = async (req, res) => {
             return res.status(400).json({ ok: false, msg: "Ya existe una tarea con ese title" });
         }
 
-        const task = await Task.create({
+        const newTask = await Task.create({
             title,
             description,
             isComplete: isComplete ?? false,
         });
 
-        return res.status(201).json({ ok: true, msg: "Tarea creada correctamente", task });
+        return res.status(201).json({ ok: true, msg: "Tarea creada correctamente", newTask });
 
     } catch (error) {
         console.error(error);
@@ -77,7 +77,7 @@ export const newTask = async (req, res) => {
     }
 
 
-    const updateTask = async (req, res) => {
+   export const updateTask = async (req, res) => {
         try {
 
             const id = req.params.id;

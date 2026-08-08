@@ -1,14 +1,14 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
 
-export const task = sequelize.define (
-    'Task',
+export const user = sequelize.define (
+    'User',
     {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
+        // id: {
+        //     type: DataTypes.INTEGER,
+        //     primaryKey: true,
+        //     autoIncrement: true,
+        // },
 
         name: {
             type: DataTypes.STRING(100),
