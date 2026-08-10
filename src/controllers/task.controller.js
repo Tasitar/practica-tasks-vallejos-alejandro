@@ -77,7 +77,7 @@ export const newTask = async (req, res) => {
     }
 
 
-    const updateTask = async (req, res) => {
+      export const updateTask = async (req, res) => {
         try {
 
             const id = req.params.id;
