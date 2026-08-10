@@ -45,10 +45,11 @@ export const newTask = async (req, res) => {
         try {
 
             const tasks = await Task.findAll();
-            if (Task.length === 0) {
+            if (tasks.length === 0) {
                 return res.status(200).json({ok: false, msg: "No hay tareas registradas"})
-                return res.status(200).json({ok: true, msg:"Peliculas encontradas", task})
             }
+            return res.status(200).json({ok: true, msg:"Peliculas encontradas", tasks})
+
                 
 
         }catch (error) {  
@@ -63,11 +64,12 @@ export const newTask = async (req, res) => {
     export const getOneTask = async (req, res) => {
         try{
             const { id } = req.params;
-            const movie = await Task.findByPk(id)
-            if (!movie) {
+            const task = await Task.findByPk(id)
+            if (!task) {
                 return res.status(404).json({ ok: false, msg: "Tarea no encontrada" });
-                return res.status(200).json({ ok: true, Task }) 
             }
+             return res.status(200).json({ ok: true, task }) 
+
 
         } catch(error) {
             console.error(error);
@@ -83,6 +85,11 @@ export const newTask = async (req, res) => {
             const id = req.params.id;
             const { title, description, isComplete } = req.body;
 
+        const taskToUpdate = await Task.findByPk(id);
+            if (!taskToUpdate) {
+                return res.status(404).json({ ok: false, msg: "Tarea no encontrada" });
+        }
+            
          if (!title || !description) {
             return res.status(400).json({ ok: false, msg: "title y description son obligatorios" });
         }
@@ -104,9 +111,8 @@ export const newTask = async (req, res) => {
             return res.status(400).json({ ok: false, msg: "Ya existe una tarea con ese title" });
         }
 
-        await movie.update({title, description, isComplete})
+        await Task.update({title, description, isComplete})
         return res.status(200).json({ ok: true, msg: "Tarea actualizada correctamente", Task });
-
 
 
         } catch (error) {
@@ -119,8 +125,8 @@ export const newTask = async (req, res) => {
     export const deleteMovie = async (req, res) => {
         try {
             const { id } = req.params;
-            const movie = await Task.findByPk(id);
-            if (!Task) {
+            const task = await Task.findByPk(id);
+            if (!task) {
               return res.status(404).json({ ok: false, msg: "Tarea no encontrada" });
             }
 
