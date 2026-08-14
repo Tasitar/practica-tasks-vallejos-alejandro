@@ -1,16 +1,19 @@
+import 'dotenv/config';
 import express from "express";
 import { starBD } from "./src/config/database.js";
 import { taskRoutes } from "./src/routes/task.routes.js";
+import { userRoutes } from "./src/routes/user.routes.js";
 
 
 const app = express();
 
 app.use(express.json())
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 
-app.use("/api", taskRoutes )
+app.use("/api", taskRoutes)
+app.use("/api",userRoutes)
 
 
 app.listen(PORT, async () => {
