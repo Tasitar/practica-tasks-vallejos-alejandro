@@ -1,4 +1,4 @@
-import { user } from "../models/user.model";
+import { user } from "../models/user.model.js";
 //Debe ser una cadena no vacía y de un máximo de 100 caracteres.
 const newUser = async (req, res) => {
     try {
@@ -26,13 +26,13 @@ const newUser = async (req, res) => {
                   return res.status(400).json({ ok: false, msg: "El correo ya esta registrado" });
               }
       
-              const user = await user.create({
+              const newUser = await user.create({
                   name,
                   email,
                   password
               });
       
-              return res.status(201).json({ ok: true, msg: "Usuario creado correctamente", user });
+              return res.status(201).json({ ok: true, msg: "Usuario creado correctamente", newUser });
       
           } catch (error) {
               console.error(error);
@@ -60,11 +60,12 @@ const newUser = async (req, res) => {
               export const getOneUser = async (req, res) => {
                   try{
                       const { id } = req.params;
-                      const user = await Task.findByPk(id)
-                      if (!user) {
+                      const foundUser = await user.findByPk(id)
+                      if (!foundUser) {
                           return res.status(404).json({ ok: false, msg: "Usuarios no encontrada" });
-                          return res.status(200).json({ ok: true, user }) 
                       }
+                          return res.status(200).json({ ok: true, foundUser }) 
+
           
                   } catch(error) {
                       console.error(error);
@@ -77,17 +78,17 @@ const newUser = async (req, res) => {
               export const deleteUsers = async (req, res) => {
                       try {
                           const { id } = req.params;
-                          const user = await users.findByPk(id);
+                          const user = await user.findByPk(id);
                           if (!user) {
                             return res.status(404).json({ ok: false, msg: "Uasuario no encontrado" });
                           }
               
-                          await users.destroy();
+                          await user.destroy();
                           return res.status(200).json({ ok: true, msg: "Usuario eliminada correctamente" });
               
               
               
-                      } catch {
+                      } catch (error) {
                          console.error(error);
                          return res.status(500).json({ ok: false, msg: "Error interno del servidor" });
                       }
@@ -118,7 +119,7 @@ const updateUsers = async (req, res) => {
                   return res.status(400).json({ ok: false, msg: "El correo ya esta registrado" });
               }
       
-              const user = await user.create({
+              const user = await user.update({
                   name,
                   email,
                   password

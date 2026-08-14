@@ -1,4 +1,4 @@
-import { Task } from "../routes/task.model.js"
+import { task } from "../models/task.model.js"
 
 
 export const newTask = async (req, res) => {
