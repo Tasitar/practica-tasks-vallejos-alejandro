@@ -50,7 +50,10 @@ export const newTask = async (req, res) => {
                 include: [
                     {
                        model: user,
-                       as: "user"
+                       as: "user",
+                       attributes: {
+                        exclude:["password"]
+                       }
                         
                     },
                 ],
@@ -74,7 +77,16 @@ export const newTask = async (req, res) => {
     export const getOneTask = async (req, res) => {
         try{
             const { id } = req.params;
-            const task = await Task.findByPk(id)
+            const task = await Task.findByPk(id, {
+                include: [
+                    {
+                    model: user, as: "user",
+                    attributes: {
+                        exclude:["password"]
+                    }
+                }
+            ]
+            })
             if (!task) {
                 return res.status(404).json({ ok: false, msg: "Tarea no encontrada" });
             }

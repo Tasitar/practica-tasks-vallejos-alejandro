@@ -1,4 +1,6 @@
+import { personalModel } from "../models/person.model.js";
 import { user } from "../models/user.model.js";
+
 //Debe ser una cadena no vacía y de un máximo de 100 caracteres.
 export const newUser = async (req, res) => {
     try {
@@ -25,22 +27,26 @@ export const newUser = async (req, res) => {
               if (existingUser) {
                   return res.status(400).json({ ok: false, msg: "El correo ya esta registrado" });
               }
-      
+              const {namePerson, lastname} = person
+              
+              const newPerson = await personalModel.create({
+                namePerson,
+                lastname,
+              })
+              
+              const person_id = newPerson.id
+
               const newUser = await user.create({
                   name,
                   email,
-                  password
+                  password,
+                  person_id
               });
 
-              
-
-              const newPerson = await user.create({
-                namePerson,
-                lastName
-              })
+                  //falta validar acordate
 
       
-              return res.status(201).json({ ok: true, msg: "Usuario creado correctamente", newUser });
+              return res.status(201).json({ ok: true, msg: "Usuario creado correctamente", newUser,person  });
       
           } catch (error) {
               console.error(error);
@@ -48,13 +54,6 @@ export const newUser = async (req, res) => {
           }
       };
       
-
-
-
-
-
-
-
 
 
 
