@@ -4,7 +4,7 @@ import { sequelize } from "../config/database.js";
 export const personalModel = sequelize.define(
     "Person",
     {
-        name:{
+        namePerson:{
             type:DataTypes.STRING(100),
             allowNull:false,
         },

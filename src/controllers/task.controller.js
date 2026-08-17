@@ -1,9 +1,10 @@
 import { Task } from "../models/task.model.js"
+import { user } from "../models/user.model.js";
 
 
 export const newTask = async (req, res) => {
     try {
-        const { title, description, isComplete } = req.body;
+        const { title, description, isComplete, user_id } = req.body;
 
         if (!title || !description) {
             return res.status(400).json({ ok: false, msg: "title y description son obligatorios" });
@@ -30,6 +31,7 @@ export const newTask = async (req, res) => {
             title,
             description,
             isComplete: isComplete ?? false,
+            user_id
         });
 
         return res.status(201).json({ ok: true, msg: "Tarea creada correctamente", newTask });
@@ -44,11 +46,19 @@ export const newTask = async (req, res) => {
    export const getTasks = async (req, res) => {
         try {
 
-            const tasks = await Task.findAll();
+            const tasks = await Task.findAll({
+                include: [
+                    {
+                       model: user,
+                       as: "user"
+                        
+                    },
+                ],
+            });
             if (tasks.length === 0) {
                 return res.status(200).json({ok: false, msg: "No hay tareas registradas"})
             }
-            return res.status(200).json({ok: true, msg:"Peliculas encontradas", tasks})
+            return res.status(200).json({ok: true, msg:"Tareas encontradas", tasks})
 
                 
 
@@ -140,4 +150,3 @@ export const newTask = async (req, res) => {
            return res.status(500).json({ ok: false, msg: "Error interno del servidor" });
         }
     }
-w

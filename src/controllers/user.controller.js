@@ -1,9 +1,9 @@
 import { user } from "../models/user.model.js";
 //Debe ser una cadena no vacía y de un máximo de 100 caracteres.
-const newUser = async (req, res) => {
+export const newUser = async (req, res) => {
     try {
 
-        const {name, email, password} = req.body;
+        const {name, email, password,person } = req.body;
 
         if(!name || !email || !password) {
             return res.status(400).json({ ok: false, msg: "name, email, password son obligatorios" });
@@ -31,6 +31,14 @@ const newUser = async (req, res) => {
                   email,
                   password
               });
+
+              
+
+              const newPerson = await user.create({
+                namePerson,
+                lastName
+              })
+
       
               return res.status(201).json({ ok: true, msg: "Usuario creado correctamente", newUser });
       
@@ -40,6 +48,17 @@ const newUser = async (req, res) => {
           }
       };
       
+
+
+
+
+
+
+
+
+
+
+
        export const getUsers = async (req, res) => {
               try {
       
@@ -93,7 +112,7 @@ const newUser = async (req, res) => {
                          return res.status(500).json({ ok: false, msg: "Error interno del servidor" });
                       }
                   }
-const updateUsers = async (req, res) => {
+export const updateUsers = async (req, res) => {
     try {
 
         const {name, email, password} = req.body;
