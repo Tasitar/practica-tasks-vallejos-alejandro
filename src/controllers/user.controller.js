@@ -5,7 +5,7 @@ import { user } from "../models/user.model.js";
 export const newUser = async (req, res) => {
     try {
 
-        const {name, email, password,person } = req.body;
+        const {name, email, password,person, social } = req.body;
 
         if(!name || !email || !password) {
             return res.status(400).json({ ok: false, msg: "name, email, password son obligatorios" });
@@ -27,8 +27,15 @@ export const newUser = async (req, res) => {
               if (existingUser) {
                   return res.status(400).json({ ok: false, msg: "El correo ya esta registrado" });
               }
+
+
               const {namePerson, lastname} = person
-              
+            
+              if (!lastname || name.length > 100) {
+                 return res.status(400).json({ message: "el apellido no culpe con el formato adecuado , asegurese de que no esta vacio o tenga mas de 100 caracteres" })
+              }
+
+
               const newPerson = await personalModel.create({
                 namePerson,
                 lastname,
@@ -43,8 +50,24 @@ export const newUser = async (req, res) => {
                   person_id
               });
 
-                  //falta validar acordate
 
+              if(social){
+                for(let red_s of social) {
+                    const {red_social, user_name} = red_s
+
+                    if (!red_social || red_social.length > 30){
+                         return res.status(400).json({ message: "el nombre de la red social no culpe con el formato adecuado , asegurese de que no esta vacio o tenga mas de 30 caracteres" })
+                    }
+                    if (!user_name || user_name.length > 20) {
+                    return res.status(400).json({ message: "el nombre de usuario no culpe con el formato adecuado , asegurese de que no esta vacio o tenga mas de 20 caracteres" })
+                }
+
+                const redSocial = await Socials.create({red_social,user_name})
+                const social_id = redSocial.dataValues.id
+
+                await Socials_Users.create({user_id,social_id})
+                }
+              }
       
               return res.status(201).json({ ok: true, msg: "Usuario creado correctamente", newUser,person  });
       
@@ -61,7 +84,10 @@ export const newUser = async (req, res) => {
        export const getUsers = async (req, res) => {
               try {
       
-                  const users = await user.findAll();
+                  const users = await user.findAll({
+                     attributes: { exclude:['password']},
+                     include:[{model:Tasks,as:'tasks'},{model:Socials,as:'red_social'}]
+                  });
                   if (Task.length === 0) {
                       return res.status(200).json({ok: false, msg: "No hay tareas Usuarios registrados"})
                       return res.status(200).json({ok: true, msg:"Usuarios encontrados", users})
@@ -78,7 +104,10 @@ export const newUser = async (req, res) => {
               export const getOneUser = async (req, res) => {
                   try{
                       const { id } = req.params;
-                      const foundUser = await user.findByPk(id)
+                      const foundUser = await user.findByPk(id, {
+                          attributes: { exclude:['password']},
+                          include:[{model:Tasks,as:'tasks'},{model:Socials,as:'red_social'}]
+                      })
                       if (!foundUser) {
                           return res.status(404).json({ ok: false, msg: "Usuarios no encontrada" });
                       }
