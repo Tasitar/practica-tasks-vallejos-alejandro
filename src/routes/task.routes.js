@@ -13,4 +13,3 @@ taskRoutes.delete("/task/:id",deleteMovie)//eliminar tarea por id
 
 
 export { taskRoutes }
-
