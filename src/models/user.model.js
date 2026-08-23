@@ -22,9 +22,9 @@ export const user = sequelize.define (
             allowNull: false
         },
         person_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        }
+             type: DataTypes.INTEGER,
+             allowNull: false
+         }
     },
 )
 

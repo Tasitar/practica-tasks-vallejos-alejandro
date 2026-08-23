@@ -1,39 +1,19 @@
 import { matchedData, validationResult } from "express-validator";
-import { personalModel } from "../models/person.model.js";
 import { user } from "../models/user.model.js";
 
 
-//Debe ser una cadena no vacía y de un máximo de 100 caracteres.
+
 export const newUser = async (req, res) => {
     try {
-        const validatedData = matchedData(req);
-        const nUser = await user
-
-              const newPerson = await personalModel.create({
-                namePerson,
-                lastname,
-              })
-              
-              const person_id = newPerson.id
-
-              const newUser = await user.create({
-                  name,
-                  email,
-                  password,
-                  person_id
-              });
-              
-            //     const redSocial = await Socials.create({red_social,user_name})
-            //     const social_id = redSocial.dataValues.id
-            //   return res.status(201).json({ ok: true, msg: "Usuario creado correctamente", newUser,person  });
-      
+        const validateData = matchedData(req);
+        const nUser = await user.create(validateData);
+        return res.status(201).json(nUser);
+            
           } catch (error) {
               console.error(error);
               return res.status(500).json({ ok: false, msg: "Error interno del servidor" });
           }
       };
-      
-
 
 
 
