@@ -12,7 +12,12 @@ export const newUserValidation = [
     body("password")
     .notEmpty()
     .withMessage("La password no debe ser vacia"),
-    body("person_id")
+
+    body("namePerson")
     .notEmpty()
-    .withMessage("El person_id no debe ser vacio"),
+    .withMessage("El nombre de la persona es obligatorio"),
+    body("lastname")
+    .notEmpty()
+    .withMessage("El apellido de la persona es obligatorio  ")
 ]
+

@@ -1,12 +1,20 @@
 import { matchedData, validationResult } from "express-validator";
 import { user } from "../models/user.model.js";
+import { personalModel } from "../models/person.model.js";
+import { Task } from "../models/task.model.js";
+
 
 
 
 export const newUser = async (req, res) => {
     try {
         const validateData = matchedData(req);
-        const nUser = await user.create(validateData);
+
+        const {namePerson, lastname, ...userData } = validateData
+
+        const newPerson = await personalModel.create({namePerson, lastname});
+
+        const nUser = await user.create({...userData,person_id:newPerson.id});
         return res.status(201).json(nUser);
             
           } catch (error) {
@@ -22,13 +30,13 @@ export const newUser = async (req, res) => {
       
                   const users = await user.findAll({
                      attributes: { exclude:['password']},
-                     include:[{model:Tasks,as:'tasks'},{model:Socials,as:'red_social'}]
+                     include:[{model:personalModel,as:'person'}]
                   });
-                  if (Task.length === 0) {
+                  if (user.length === 0) {
                       return res.status(200).json({ok: false, msg: "No hay tareas Usuarios registrados"})
-                      return res.status(200).json({ok: true, msg:"Usuarios encontrados", users})
                   }
-                      
+                    
+                      return res.status(200).json({ok:true, users})
       
               }catch (error) {  
       
