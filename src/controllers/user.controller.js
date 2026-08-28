@@ -1,7 +1,6 @@
 import { matchedData, validationResult } from "express-validator";
 import { user } from "../models/user.model.js";
 import { personalModel } from "../models/person.model.js";
-import { Task } from "../models/task.model.js";
 
 
 

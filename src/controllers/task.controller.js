@@ -5,28 +5,11 @@ import { user } from "../models/user.model.js";
 
 export const newTask = async (req, res) => {
     try {
-        const { title, description, isComplete, user_id } = req.body;
+            const validateData = matchedData(req);
+        
+            console.log(validateData);
 
-        if (!title || !description) {
-            return res.status(400).json({ ok: false, msg: "title y description son obligatorios" });
-        }
-
-        if (typeof title !== "string" || title.trim().length === 0 || title.length > 100) {
-            return res.status(400).json({ ok: false, msg: "title debe ser una cadena no vacía de máximo 100 caracteres" });
-        }
-
-        if (typeof description !== "string" || description.trim().length === 0 || description.length > 100) {
-            return res.status(400).json({ ok: false, msg: "description debe ser una cadena no vacía de máximo 100 caracteres" });
-        }
-
-        if (isComplete !== undefined && typeof isComplete !== "boolean") {
-            return res.status(400).json({ ok: false, msg: "isComplete debe ser un valor booleano" });
-        }
-
-        const existingTask = await Task.findOne({ where: { title } });
-        if (existingTask) {
-            return res.status(400).json({ ok: false, msg: "Ya existe una tarea con ese title" });
-        }
+            const {title, description,isComplete, user_id} = validateData
 
         const newTask = await Task.create({
             title,
@@ -39,7 +22,7 @@ export const newTask = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ ok: false, msg: "Error interno del servidor" });
+        return res.status(500).json({ ok: false, msg: "Error al intentar crear una nueva tarea!!" });
     }
 };
 
@@ -104,39 +87,23 @@ export const newTask = async (req, res) => {
 
       export const updateTask = async (req, res) => {
         try {
-
-            const id = req.params.id;
-            const { title, description, isComplete } = req.body;
+            
+            const validateData = matchedData(req,{locations:["body"]})
+            const { id } = matchedData(req,{locations:["params"]});
 
         const taskToUpdate = await Task.findByPk(id);
             if (!taskToUpdate) {
-                return res.status(404).json({ ok: false, msg: "Tarea no encontrada" });
-        }
-            
-         if (!title || !description) {
-            return res.status(400).json({ ok: false, msg: "title y description son obligatorios" });
-        }
+                return res.status(404).json({ok: false, msg:"tarea no encontrada"})
+            }
+        
 
-        if (typeof title !== "string" || title.trim().length === 0 || title.length > 100) {
-            return res.status(400).json({ ok: false, msg: "title debe ser una cadena no vacía de máximo 100 caracteres" });
-        }
+        await taskToUpdate.update(validateData)
 
-        if (typeof description !== "string" || description.trim().length === 0 || description.length > 100) {
-            return res.status(400).json({ ok: false, msg: "description debe ser una cadena no vacía de máximo 100 caracteres" });
-        }
-
-        if (isComplete !== undefined && typeof isComplete !== "boolean") {
-            return res.status(400).json({ ok: false, msg: "isComplete debe ser un valor booleano" });
-        }
-
-        const existingTask = await Task.findOne({ where: { title } });
-        if (existingTask) {
-            return res.status(400).json({ ok: false, msg: "Ya existe una tarea con ese title" });
-        }
-
-        await Task.update({title, description, isComplete})
-        return res.status(200).json({ ok: true, msg: "Tarea actualizada correctamente", Task });
-
+            return res.status(200).json({
+                ok: true,
+                msg: "Tarea actualiza correctamente",
+                task: taskToUpdate
+            });
 
         } catch (error) {
             console.error(error);
