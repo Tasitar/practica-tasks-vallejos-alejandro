@@ -1,4 +1,5 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
+import { user } from "../../models/user.model.js";
 
 export const newUserValidation = [
     body("name")
@@ -21,3 +22,41 @@ export const newUserValidation = [
     .withMessage("El apellido de la persona es obligatorio  ")
 ]
 
+
+export const updateUserValidation = [
+    param("id")
+    .isInt().withMessage('el id debe ser un numero entero'),
+
+    body("name")
+    .trim()
+    .notEmpty().withMessage("el nombre no puede estar vacio")
+    .optional()
+    .isString().withMessage("El nombre tiene que ser un string"),
+
+    body("email")
+    .optional()
+    .notEmpty().withMessage("El correo electronico no debe estar vacio")
+    .isEmail().withMessage("el correo electronico debe ser valido")
+    .custom(async (email) => {
+                    const existingEmail = await user.findOne({ where: { email }});
+                    
+                    if (existingEmail){
+                            throw new Error("ese correo ya existe / esta registrado")
+                    }
+                   return true
+            }),
+
+     body("password")
+    .notEmpty()
+    .optional()
+    .withMessage("La password no debe ser vacia"),
+
+    // body("namePerson")
+    // .optional()
+    // .notEmpty()
+    // .withMessage("El nombre de la persona es obligatorio"),
+    // body("lastname")
+    // .optional()
+    // .notEmpty()
+    // .withMessage("El apellido de la persona es obligatorio  ")   
+]

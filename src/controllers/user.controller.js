@@ -83,42 +83,31 @@ export const newUser = async (req, res) => {
                          return res.status(500).json({ ok: false, msg: "Error interno del servidor" });
                       }
                   }
+
+
+
 export const updateUsers = async (req, res) => {
     try {
+        
+        const validateData = matchedData(req,{locations:["body"]});
+        const { id } = matchedData(req,{locations:["params"]});
 
-        const {name, email, password} = req.body;
 
-        if(!name || !email || !password) {
-            return res.status(400).json({ ok: false, msg: "name, email, password son obligatorios" });
-        } 
-             
-              if (typeof name !== "string" || name.trim().length === 0 || name.length > 100) {
-                  return res.status(400).json({ ok: false, msg: "name debe ser una cadena no vacía de máximo 100 caracteres" });
-              }
-      
-              if (typeof email !== "string" || email.trim().length === 0 || email.length > 100) {
-                  return res.status(400).json({ ok: false, msg: "email debe ser una cadena no vacía de máximo 100 caracteres" });
-              }
-      
-                if (typeof password !== "string" || password.trim().length === 0 || password.length > 100) {
-                  return res.status(400).json({ ok: false, msg: "password debe ser una cadena no vacía de máximo 100 caracteres" });
-              }        
-      
-              const existingUser = await user.findOne({ where: { email } });
-              if (existingUser) {
-                  return res.status(400).json({ ok: false, msg: "El correo ya esta registrado" });
-              }
-      
-              const user = await user.update({
-                  name,
-                  email,
-                  password
-              });
-      
-              return res.status(201).json({ ok: true, msg: "Usuario creado correctamente", user });
-      
+        const userToUpdate = await user.findByPk(id)
+        if (!userToUpdate) {
+          return res.status(404).json({ok: false, msg:"Usuario no encontrado"})
+        }
+
+        await userToUpdate.update(validateData)
+
+            return res.status(200).json({
+                ok: true,
+                msg: "Tarea actualizada correctamente",
+                user: userToUpdate
+            })
+
           } catch (error) {
               console.error(error);
-              return res.status(500).json({ ok: false, msg: "Error interno del servidor" });
+              return res.status(500).json({ ok: false, msg: "Error al intentar actualizar el usuario" });
           }
       };
