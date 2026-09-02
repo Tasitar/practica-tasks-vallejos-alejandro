@@ -1,5 +1,14 @@
 import { body, param } from "express-validator";
 import { user } from "../../models/user.model.js";
+//datos pal thunder
+// {
+  
+//   "name":"con validator",
+//   "email":"manolos@live.es",
+//   "password":"socialrut",
+//   "namePerson":"hideo",
+//   "lastname":"kojima"
+// }
 
 export const newUserValidation = [
     body("name")

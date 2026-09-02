@@ -16,7 +16,7 @@ export const sequelize = new Sequelize (
 export const starBD = async () => {
     try {
         await sequelize.authenticate();
-        await sequelize.sync({force: false})
+        await sequelize.sync({force: true})
         console.log("!!La conecion con la BD fue un exito!!");
 
     } catch(error) {

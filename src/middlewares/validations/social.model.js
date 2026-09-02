@@ -1,7 +1,7 @@
 import { body, param } from "express-validator";
 
 export const createSocialValidation = [
-    body('red_secial')
+    body('red_social')
         .notEmpty()
         .withMessage('el campo no debe estar vacio')
         .isLength({max:30})
@@ -17,7 +17,7 @@ export const updateSocialValidation = [
     param('id')
         .notEmpty()
         .withMessage('El ID del usuario es obligatorio'),
-    body('red_secial')
+    body('red_social')
         .optional()
         .notEmpty()
         .withMessage('el campo no debe estar vacio')

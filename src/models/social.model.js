@@ -3,7 +3,7 @@ import { sequelize } from "../config/database.js";
 
 export const Social = sequelize.define(
     "Social", {
-        red_secial: {
+        red_social: {
             type: DataTypes.STRING,
             allowNull: false
         },
